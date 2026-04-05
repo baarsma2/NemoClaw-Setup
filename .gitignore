@@ -1,0 +1,12 @@
+# Project-local files — not part of the published skill
+claude.md
+CLAUDE.md
+.env
+*.env
+*.log
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
