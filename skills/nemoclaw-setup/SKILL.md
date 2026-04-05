@@ -11,6 +11,25 @@ description: >
   sandboxed AI agents, nemoclaw onboard, or wants to set up a secure autonomous agent
   environment. Also trigger when the user asks about sandbox egress policies, Landlock
   security, sub-agent spawning, or openclaw.json configuration.
+license: MIT
+compatibility:
+  - claude-code
+  - cursor
+  - codex
+  - windsurf
+  - github-copilot
+metadata:
+  author: baarsma2
+  version: 1.0.0
+  tags:
+    - nvidia
+    - nemoclaw
+    - sandbox
+    - devops
+    - ai-agents
+    - docker
+    - security
+    - linux
 ---
 
 # NemoClaw Setup & Manager Skill
