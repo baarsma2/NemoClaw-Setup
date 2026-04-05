@@ -9,8 +9,9 @@ Quick index of common errors encountered during NemoClaw setup and operation.
 ### Locked out after enabling UFW
 **Symptom:** Cannot SSH to instance after `ufw enable`.
 **Cause:** Forgot to `ufw allow 2222/tcp` before enabling, or SSH still on port 22.
-**Fix:** Use AWS EC2 Instance Connect or Serial Console. Or detach root volume,
-mount on another instance, edit `/etc/ssh/sshd_config` and UFW rules, reattach.
+**Fix:** Use your provider's web/serial console (AWS Instance Connect, Azure Serial Console,
+Hostinger VNC, etc.). Or detach root volume, mount on another instance, edit
+`/etc/ssh/sshd_config` and UFW rules, reattach.
 
 ### SSH still listening on port 22 after config change
 **Symptom:** `ss -tlnp | grep :22` still shows sshd.

@@ -56,7 +56,7 @@ The browser may show a "device identity required" error over tunneled connection
 
 Fix:
 ```bash
-# On the EC2 instance, inside the sandbox:
+# On the server, inside the sandbox:
 cat /sandbox/.openclaw/openclaw.json | grep -A5 "auth"
 ```
 

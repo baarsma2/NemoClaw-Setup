@@ -1,12 +1,12 @@
 # Phase 1: Security Hardening
 
 ## Overview
-Transition the EC2 instance from default SSH on port 22 to a hardened configuration.
-This is the highest-risk phase — an error here can lock you out of the instance permanently.
+Transition the Linux server from default SSH on port 22 to a hardened configuration.
+This is the highest-risk phase — an error here can lock you out permanently.
 
 ## Prerequisites
 - Active SSH session on port 22
-- AWS Management Console access to modify Security Groups
+- Access to your cloud provider's firewall/network rules (or iptables for bare metal)
 - Know your public IP address (use `curl ifconfig.me`)
 
 ## Steps
@@ -74,12 +74,30 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
-### 1.7 Update AWS Security Group
-In the AWS Console:
-1. Navigate to EC2 → Security Groups → your instance's SG
-2. Remove the inbound rule for port 22
+### 1.7 Update Cloud Firewall / Perimeter Rules
+
+You MUST also update the firewall at your cloud provider level (in addition to UFW on the host).
+Remove the old port 22 rule and add port 2222 restricted to your IP.
+
+**AWS EC2:**
+1. EC2 Console → Security Groups → your instance's SG
+2. Remove inbound rule for port 22
 3. Add: Custom TCP, Port 2222, Source: `<your-ip>/32`
-4. Ensure ports 80 and 443 are open if web gateway is needed
+
+**Azure VM:**
+1. Azure Portal → VM → Networking → Inbound port rules
+2. Remove port 22 rule
+3. Add: Port 2222, Protocol TCP, Source: `<your-ip>/32`
+
+**Hostinger / DigitalOcean / Other VPS:**
+1. Open provider's firewall panel (if available)
+2. Remove port 22, add port 2222 restricted to your IP
+3. If no cloud firewall exists, UFW alone handles it — ensure it's enabled
+
+**Bare Metal:**
+UFW is your only perimeter. Ensure it is enabled and correct.
+
+Ensure ports 80 and 443 are open if web gateway is needed.
 
 ### 1.8 Verify old port is closed
 ```bash
@@ -90,7 +108,7 @@ sudo ss -tlnp | grep :2222  # should show sshd
 ## VSCode SSH Config Update
 If using VSCode Remote SSH, update `~/.ssh/config`:
 ```
-Host nemoclaw-ec2
+Host nemoclaw-server
     HostName <public-ip-or-elastic-ip>
     User ubuntu
     Port 2222
@@ -99,6 +117,7 @@ Host nemoclaw-ec2
 
 ## Rollback Plan
 If locked out:
-1. Use AWS EC2 Instance Connect (if enabled) or EC2 Serial Console
-2. Or stop the instance, detach the root volume, attach to another instance,
-   fix sshd_config, reattach, and restart
+- **AWS:** Use EC2 Instance Connect, Serial Console, or detach/reattach root volume via another instance
+- **Azure:** Use Serial Console or Run Command in Azure Portal
+- **Hostinger/DO:** Use provider's web console / VNC access
+- **Bare metal:** Physical or IPMI/iLO/iDRAC console access

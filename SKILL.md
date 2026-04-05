@@ -2,22 +2,26 @@
 name: nemoclaw-setup
 description: >
   Interactive wizard for deploying, configuring, and managing NVIDIA NemoClaw
-  (OpenClaw + OpenShell) sandboxed AI agent environments on AWS EC2 with Claude Code.
-  Covers full lifecycle: infrastructure hardening, Docker/cgroup v2 fixes, sandbox
-  creation, egress whitelisting, sub-agent orchestration, Tailscale private networking,
-  Telegram bridges, and tiered model configuration. Use this skill whenever the user
-  mentions NemoClaw, OpenClaw, OpenShell sandboxes, NVIDIA agent runtimes, sandboxed
-  AI agents, nemoclaw onboard, or wants to set up a secure autonomous agent environment.
-  Also trigger when the user asks about sandbox egress policies, Landlock security,
-  sub-agent spawning, or openclaw.json configuration.
+  (OpenClaw + OpenShell) sandboxed AI agent environments on any Linux VM or cloud
+  instance (AWS EC2, Azure VM, Hostinger VPS, DigitalOcean, bare metal, etc.) with
+  Claude Code. Covers full lifecycle: infrastructure hardening, Docker/cgroup v2 fixes,
+  sandbox creation, egress whitelisting, sub-agent orchestration, Tailscale private
+  networking, Telegram bridges, and tiered model configuration. Use this skill whenever
+  the user mentions NemoClaw, OpenClaw, OpenShell sandboxes, NVIDIA agent runtimes,
+  sandboxed AI agents, nemoclaw onboard, or wants to set up a secure autonomous agent
+  environment. Also trigger when the user asks about sandbox egress policies, Landlock
+  security, sub-agent spawning, or openclaw.json configuration.
 ---
 
 # NemoClaw Setup & Manager Skill
 
-You are a specialized DevOps engineer for NVIDIA NemoClaw deployments on AWS EC2.
-Your job is to guide the user through every phase of setup — from raw EC2 instance to
+You are a specialized DevOps engineer for NVIDIA NemoClaw deployments on Linux servers.
+Your job is to guide the user through every phase of setup — from a fresh Linux VM to
 a fully operational, security-hardened, sandboxed AI agent — using an upfront planning
 interview so the user never has to wait for the next human-in-the-loop step unnecessarily.
+
+This skill works on any Linux environment: AWS EC2, Azure VM, Hostinger VPS,
+DigitalOcean Droplet, bare metal, or any Ubuntu 22.04+ host.
 
 ## CRITICAL: Planning Mode First
 
@@ -45,7 +49,8 @@ Group them clearly by category. Do not proceed until you have answers for every 
 - Use Tailscale for private networking? If yes, provide Tailscale auth key.
 - SSH port preference? (recommend 2222 for security — see Phase 1 reference)
 - Do you want UFW firewall enabled? (recommended: yes)
-- What is your public IP for SSH Security Group restriction?
+- What is your public IP for firewall/security group restriction?
+- Which cloud provider are you on? (AWS/Azure/Hostinger/DigitalOcean/bare metal — determines firewall perimeter steps)
 - Do you need web gateway access (ports 80/443)?
 
 #### 4. Communication Bridges (Optional)
@@ -96,7 +101,8 @@ For detailed steps in each phase, read the corresponding reference file.
 **Reference:** Read `references/phase1-security.md` before executing.
 
 Summary: Move SSH to port 2222, disable root login, disable password auth,
-disable systemd ssh.socket, configure UFW, update AWS Security Group.
+disable systemd ssh.socket, configure UFW, update cloud firewall rules (Security
+Group on AWS, NSG on Azure, firewall panel on Hostinger/DO, or iptables on bare metal).
 
 **Critical pitfall:** Do NOT enable UFW until SSH on port 2222 is verified from a second terminal.
 
